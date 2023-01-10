@@ -2,11 +2,11 @@
 data segment
 num1 db ?
 num2 db ?
-sum db ?
+product db ?
 carry db 00h
 msg1 db 10,13, "Enter first no: $"
 msg2 db 10,13, "Enter second no: $"
-msg3 db 10,13, "Sum is: $"
+msg3 db 10,13, "product is: $"
 data ends
 code segment
 assume cs: code, ds: data
@@ -29,19 +29,16 @@ start:
     lea dx, msg3
     mov ah, 09h
     int 21h
-    ;add two numbers
+    ;multiply two numbers
     mov al, num1
-    add al, num2
+    mul num2
     daa
-    jnc skip3
-    inc carry
-    skip3:mov sum, al
-    ;print carry
-    lea si, carry
-    call output
+    mov product, al
     
-    ;print sum
-    lea si, sum
+   
+    
+    ;print product
+    lea si, product
     call output
     mov ah, 4ch
     int 21h
