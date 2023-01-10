@@ -2,7 +2,7 @@
 data segment
 num1 db ?
 num2 db ?
-product db ?
+product dw ?
 carry db 00h
 msg1 db 10,13, "Enter first no: $"
 msg2 db 10,13, "Enter second no: $"
@@ -32,8 +32,7 @@ start:
     ;multiply two numbers
     mov al, num1
     mul num2
-    daa
-    mov product, al
+    mov product,ax
     
    
     
@@ -67,10 +66,32 @@ input proc near
 input endp 
 output proc near
 ;function output
-    mov al, [si]
+    mov ax, [si]
+    and ah, 0f0h
+    mov cl, 04h
+    rol ah, cl
+    add ah, 30h
+    cmp ah, 39h
+    jle skip21
+    add ah, 07h
+    skip21: mov dl, ah
+    mov ah, 02h
+    int 21h
+;output lsb
+    mov ax, [si]
+    and ah, 0fh
+    add ah, 30h
+    cmp ah, 39h
+    jle skip20
+    add ah, 07h
+    skip20: mov dl, ah
+    mov ah, 02h
+    int 21h
+;function output
+    mov ax, [si]
     and al, 0f0h
     mov cl, 04h
-    ror al, cl
+    rol al, cl
     add al, 30h
     cmp al, 39h
     jle skip4
@@ -79,7 +100,7 @@ output proc near
     mov ah, 02h
     int 21h
 ;output lsb
-    mov al, [si]
+    mov ax, [si]
     and al, 0fh
     add al, 30h
     cmp al, 39h
