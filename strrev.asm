@@ -25,6 +25,7 @@ start:
     inc al
     jmp loop1
     loop2:;reverse
+    
     dec si
     mov di, offset str2 +1
     loop3: mov cl, [si]
@@ -33,9 +34,11 @@ start:
     inc di
     dec al
     jnz loop3
+
     mov ah, 09H;print message
     lea dx, msg2
     int 21h
+
     mov ah, 09H;print string 2
     mov si, offset str2+1
     mov dx, si
