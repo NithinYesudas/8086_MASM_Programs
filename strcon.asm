@@ -16,6 +16,7 @@ code segment
 	int 21H
 	mov si,offset str1
 	call input
+	
 
 	mov ah,09H ; 		Display Msg2
 	lea dx,msg2
@@ -27,6 +28,7 @@ code segment
 	lea dx,msg3
 	int 21H
 				;Concatenate String
+	
 	mov cl,str1+1		;get Length
 	mov si,offset str1+2	;get index to first element
 	next:inc si		;throught till the end of array
