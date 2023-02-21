@@ -1,0 +1,75 @@
+
+data segment
+    str1 db 20 dup('$')
+    str2 db 20 dup('$')
+    msg1 db 10,13, "Enter str1: $"
+    msg2 db 10,13, "Enter str2: $"
+    msg3 db 10,13, "Equal$"
+    msg4 db 10,13, "no equal$"
+data ends
+code segment
+assume cs: code, ds: data
+start:
+    mov ax, data
+    mov ds, ax
+
+    mov ah, 09H
+    lea dx, msg1
+    int 21H
+    mov si, offset str1
+    call input
+
+    mov ah, 09H
+    lea dx, msg2
+    int 21H
+    mov si, offset str2
+    call input
+
+    mov bl, 13
+    mov al, 00h
+    mov si, offset str1+2
+    loop1: cmp [si], bl
+    je loop2
+    inc si
+    inc al
+    jmp loop1
+    loop2:
+    mov cl, 00h
+    mov si, offset str2+2
+    loop3: cmp [si], bl
+    je loop4
+    inc si
+    inc cl
+    jmp loop3
+    loop4:
+    cmp al, cl
+    je loop5
+    lea dx, msg4
+    mov ah, 09H
+    int 21H
+    jmp loop7
+
+    loop5:
+    mov si, offset str1+2
+    mov di, offset str2+2
+    loop6: mov cl, [si]
+    cmp [di], cl
+    jne loop4
+    inc si
+    inc di
+    dec al
+    jnz loop6
+    mov ah, 09H
+    lea dx, msg3
+    int 21h
+
+    loop7: mov ah, 4ch
+    int 21h
+input proc near
+    mov ah, 0ah
+    mov dx, si
+    int 21H
+    ret
+input endp        
+code ends
+end start
